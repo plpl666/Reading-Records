@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mapper.SearchRecordsMapper">
+  <resultMap id="BaseResultMap" type="com.imooc.pojo.SearchRecords">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="book_record" jdbcType="VARCHAR" property="bookRecord" />
+    <result column="recept_record" jdbcType="VARCHAR" property="receptRecord" />
+  </resultMap>
+
+  <select id="selectReceptHotRecord" resultType="java.lang.String">
+    SELECT search_records.recept_record
+    FROM search_records
+    GROUP BY search_records.recept_record
+    ORDER BY COUNT(search_records.recept_record)
+    DESC LIMIT 6
+  </select>
+
+  <select id="selectBookHotRecord" resultType="java.lang.String">
+    SELECT search_records.book_record
+    FROM search_records
+    GROUP BY search_records.book_record
+    ORDER BY COUNT(search_records.book_record)
+    DESC LIMIT 6
+  </select>
+
+</mapper>

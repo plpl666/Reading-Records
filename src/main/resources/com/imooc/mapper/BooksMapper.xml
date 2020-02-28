@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.mapper.BooksMapper" >
+  <resultMap id="BaseResultMap" type="com.imooc.pojo.Books" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="publishing" property="publishing" jdbcType="VARCHAR" />
+    <result column="gist" property="gist" jdbcType="VARCHAR" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="sell_time" property="sellTime" jdbcType="VARCHAR" />
+    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+    <result column="schedule" property="schedule" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="up_time" property="upTime" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap2" type="com.imooc.pojo.vo.BooksVO" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gist" property="gist" jdbcType="VARCHAR" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="up_time" property="upTime" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectBooksByCreateTimeLimit6" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM books
+    WHERE books.user_id = #{userId}
+    ORDER BY books.create_time DESC
+    LIMIT 6
+  </select>
+
+  <select id="selectBooksByUpTimeLimit6" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT * FROM books
+    WHERE books.user_id = #{userId} AND books.status = 1
+    ORDER BY books.up_time DESC
+    LIMIT 6
+  </select>
+
+  <select id="selectUserAndBook" resultMap="BaseResultMap2">
+    SELECT books.id, books.name, books.img_url, books.gist, books.up_time, books.user_id, users.nickname, users.face_url
+    FROM books LEFT JOIN users
+    ON books.user_id = users.id
+    WHERE books.status = 1
+    ORDER BY books.up_time DESC
+  </select>
+
+  <select id="selectUserAndBookByDesc" resultMap="BaseResultMap2" parameterType="java.lang.String">
+    SELECT books.id, books.name, books.img_url, books.gist, books.up_time, books.user_id, users.nickname, users.face_url
+    FROM books LEFT JOIN users
+    ON books.user_id = users.id
+    WHERE books.status = 1
+    <if test="desc != null and desc != ''">
+      AND books.name LIKE '%${desc}%'
+    </if>
+    ORDER BY books.up_time DESC
+  </select>
+
+  <select id="selectRecommendBooks" resultMap="BaseResultMap">
+    SELECT *
+    FROM books
+    WHERE books.status = 1
+    GROUP BY books.name
+    ORDER BY COUNT(books.name) DESC
+    LIMIT 4
+  </select>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mapper.UsersMapper">
+  <resultMap id="BaseResultMap" type="com.imooc.pojo.Users">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="face_url" jdbcType="VARCHAR" property="faceUrl" />
+  </resultMap>
+
+  <select id="selectUserFollowsOrFans" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT users.*
+    FROM users LEFT JOIN users_fans
+    <if test="userId != null and userId != ''">
+      ON users.id = users_fans.fan_id
+    </if>
+    <if test="fanId != null and fanId != ''">
+      ON users.id = users_fans.user_id
+    </if>
+    <if test="userId != null and userId != ''">
+      WHERE users_fans.user_id = #{userId}
+    </if>
+    <if test="fanId != null and fanId != ''">
+      WHERE users_fans.fan_id = #{fanId}
+    </if>
+  </select>
+
+</mapper>

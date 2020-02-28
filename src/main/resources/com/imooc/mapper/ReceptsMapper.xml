@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.mapper.ReceptsMapper" >
+  <resultMap id="BaseResultMap" type="com.imooc.pojo.Recepts" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="flow" property="flow" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap2" type="com.imooc.pojo.vo.ReceptsVO" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="flow" property="flow" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="face_url" property="faceUrl" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectRecepts" resultMap="BaseResultMap2" parameterType="java.lang.String">
+    SELECT recepts.id, recepts.title, recepts.content, recepts.flow, recepts.create_time, recepts.user_id, users.nickname, users.face_url
+    FROM recepts LEFT JOIN users
+    ON recepts.user_id = users.id
+    WHERE 1 = 1
+    <if test="userId != null and userId != ''">
+        AND users.id = #{userId}
+    </if>
+    ORDER BY recepts.create_time DESC
+  </select>
+
+  <select id="selectReceptsByDesc" resultMap="BaseResultMap2" parameterType="java.lang.String">
+    SELECT recepts.id, recepts.title, recepts.content, recepts.flow, recepts.create_time, recepts.user_id, users.nickname, users.face_url
+    FROM recepts LEFT JOIN users
+    ON recepts.user_id = users.id
+    WHERE recepts.title LIKE '%${desc}%'
+    ORDER BY recepts.create_time DESC
+  </select>
+
+</mapper>
